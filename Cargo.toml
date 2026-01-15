@@ -13,6 +13,7 @@ color-eyre = { version = "0.6", default-features = false }
 thiserror = "2.0"
 chrono = { version = "0.4", features = ["serde"] }
 fuzzy-matcher = "0.3.7"
+dialoguer = "0.12"
 
 [profile.samply]
 inherits = "release"

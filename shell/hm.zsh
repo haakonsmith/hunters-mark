@@ -1,10 +1,10 @@
 # Hunter's Mark shell integration for Zsh
-# Add to ~/.zshrc: eval "$(hm init zsh)"
+# Add to ~/.zshrc: eval "$(hunters-mark init zsh)"
 
 hm() {
     # If no arguments, show help
     if [ $# -eq 0 ]; then
-        command hm --help
+        command hunters-mark --help
         return
     fi
 
@@ -13,7 +13,7 @@ hm() {
     # Handle subcommands that don't need special treatment
     case "$subcommand" in
         add|list|remove|init|completions|path|--help|-h|--version|-v)
-            command hm "$@"
+            command hunters-mark "$@"
             return
             ;;
     esac
@@ -23,7 +23,7 @@ hm() {
     local target_path
 
     # Get the target path
-    target_path=$(command hm path "$mark_name" 2>&1)
+    target_path=$(command hunters-mark path "$mark_name" 2>&1)
 
     if [ $? -eq 0 ]; then
         cd "$target_path" || return 1

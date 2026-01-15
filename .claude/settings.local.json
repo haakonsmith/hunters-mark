@@ -4,7 +4,10 @@
       "WebSearch",
       "Bash(cargo build:*)",
       "Bash(cargo run:*)",
-      "Bash(cargo update:*)"
+      "Bash(cargo update:*)",
+      "mcp__acp__Write",
+      "mcp__acp__Edit",
+      "mcp__acp__Bash"
     ]
   }
 }

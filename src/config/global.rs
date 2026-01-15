@@ -1,7 +1,6 @@
 use crate::error::{HuntersMarkError, Result};
 use chrono::{DateTime, Utc};
 use fuzzy_matcher::FuzzyMatcher;
-use fuzzy_matcher::skim::SkimMatcherV2;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::collections::hash_map::Entry;
@@ -100,16 +99,48 @@ impl Config {
         Ok(())
     }
 
+    /// Returns a list of all matches and their respective scores
+    ///
+    /// Returns them sorted
+    pub fn match_all(
+        &mut self,
+        skim: impl FuzzyMatcher,
+        pattern: impl AsRef<str>,
+    ) -> Result<Vec<(&Path, &Mark, i64)>> {
+        let pattern = pattern.as_ref();
+
+        let mut matches: Vec<(&Path, &Mark, i64)> = Vec::new();
+
+        for (path, mark) in self.marks.iter_mut() {
+            if let Some(score) = skim.fuzzy_match(&mark.name, pattern) {
+                matches.push((path.as_path(), mark, score));
+            }
+        }
+
+        matches.sort_by(|a, b| b.2.cmp(&a.2));
+        Ok(matches)
+    }
+
     pub fn match_mark_mut(
         &mut self,
         skim: impl FuzzyMatcher,
         pattern: impl AsRef<str>,
     ) -> std::result::Result<(&PathBuf, &mut Mark), HuntersMarkError> {
         let pattern = pattern.as_ref();
-        self.marks
-            .iter_mut()
-            .max_by_key(|(_, mark)| skim.fuzzy_match(&mark.name, pattern).unwrap_or_default())
-            .ok_or_else(|| HuntersMarkError::MarkNotFound(pattern.to_string()))
+
+        let mut best_match = None;
+        let mut best_score = 0;
+
+        for (path, mark) in self.marks.iter_mut() {
+            if let Some(score) = skim.fuzzy_match(&mark.name, pattern) {
+                if score > best_score {
+                    best_match = Some((path, mark));
+                    best_score = score;
+                }
+            }
+        }
+
+        best_match.ok_or_else(|| HuntersMarkError::MarkNotFound(pattern.to_string()))
     }
 
     /// Remove a mark
