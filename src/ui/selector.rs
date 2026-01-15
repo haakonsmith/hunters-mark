@@ -37,7 +37,12 @@ pub fn select_from_matches(matches: &[Match]) -> Result<Option<&Match>> {
     // Select the match to use (either prompt user or use best match)
     let selected_match = if matches.len() > 1 {
         let selected_idx = select_generic(&matches, |m| {
-            format!("{} → {}", m.mark.name, m.path.display())
+            format!(
+                "{} → {} Accessed: {}",
+                m.mark.name,
+                m.path.display(),
+                m.mark.last_accessed
+            )
         })?;
 
         match selected_idx {

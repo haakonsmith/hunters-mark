@@ -94,7 +94,7 @@ impl Backend {
         distance: i64,
     ) -> Result<Vec<Match>> {
         let pattern = pattern.as_ref();
-        let matches = dbg!(self.match_all(skim, pattern)?);
+        let matches = self.match_all(skim, pattern)?;
 
         let best_match = matches
             .first()
@@ -116,10 +116,4 @@ pub struct Match {
     pub path: PathBuf,
     pub mark: Mark,
     pub score: i64,
-}
-
-impl Match {
-    pub fn new(path: PathBuf, mark: Mark, score: i64) -> Self {
-        Match { path, mark, score }
-    }
 }
