@@ -1,4 +1,4 @@
-use crate::error::Result;
+use crate::{backend::Match, error::Result};
 use dialoguer::{
     Select,
     console::{Style, Term},
@@ -9,10 +9,7 @@ use std::fs::OpenOptions;
 /// Displays an interactive selection dialog for choosing from multiple matches.
 ///
 /// Returns the index of the selected item, or None if the user cancelled.
-pub fn select_from_matches<T>(
-    items: &[T],
-    formatter: impl Fn(&T) -> String,
-) -> Result<Option<usize>> {
+pub fn select_generic<T>(items: &[T], formatter: impl Fn(&T) -> String) -> Result<Option<usize>> {
     // Format all items for display
     let formatted_items: Vec<String> = items.iter().map(|item| formatter(item)).collect();
 
@@ -34,4 +31,22 @@ pub fn select_from_matches<T>(
         .interact_on_opt(&term)?;
 
     Ok(selection)
+}
+
+pub fn select_from_matches(matches: &[Match]) -> Result<Option<&Match>> {
+    // Select the match to use (either prompt user or use best match)
+    let selected_match = if matches.len() > 1 {
+        let selected_idx = select_generic(&matches, |m| {
+            format!("{} → {}", m.mark.name, m.path.display())
+        })?;
+
+        match selected_idx {
+            Some(idx) => &matches[idx],
+            None => return Ok(None),
+        }
+    } else {
+        &matches[0]
+    };
+
+    Ok(Some(selected_match))
 }

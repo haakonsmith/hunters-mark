@@ -1,8 +1,8 @@
-use crate::config::Config;
+use crate::backend::Backend;
 use crate::error::Result;
 
 pub fn list(tag: Option<String>, recent: bool) -> Result<()> {
-    let config = Config::load()?;
+    let config = Backend::load()?.config;
 
     if config.marks.is_empty() {
         println!("No marks yet. Add one with the add command <name>");

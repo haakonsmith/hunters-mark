@@ -1,3 +1,4 @@
+mod backend;
 mod cli;
 mod commands;
 mod config;
@@ -20,7 +21,7 @@ fn main() -> color_eyre::Result<()> {
     match cli.command {
         Some(Commands::Add { name, path, tags }) => commands::add(name, path, tags)?,
         Some(Commands::List { tag, recent }) => commands::list(tag, recent)?,
-        Some(Commands::Remove { name }) => commands::remove(name)?,
+        Some(Commands::Remove { name }) => commands::remove(name.as_deref())?,
         Some(Commands::Init { shell, prefix }) => commands::init(shell, prefix)?,
         Some(Commands::Completions { shell }) => commands::completions(shell)?,
         Some(Commands::Path { name }) => commands::path(name)?,

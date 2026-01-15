@@ -44,8 +44,8 @@ pub enum Commands {
 
     /// Remove a mark
     Remove {
-        /// Name of the mark to remove
-        name: String,
+        /// Name of the mark to remove, if not provided, open selector with current mark default
+        name: Option<String>,
     },
 
     /// Initialize shell integration

@@ -1,39 +1,19 @@
-use crate::config::Config;
+use crate::backend::Backend;
+
 use crate::error::{HuntersMarkError, Result};
 use crate::ui::select_from_matches;
 use chrono::Utc;
 
 pub fn path(pattern: String) -> Result<()> {
     let skim = fuzzy_matcher::skim::SkimMatcherV2::default();
-    let mut config = Config::load()?;
+    let mut backend = Backend::load()?;
 
-    let matches = config.match_all(skim, &pattern)?;
+    let matches = backend.close_to_best_matches(skim, &pattern, 5)?;
 
-    let best_match = matches
-        .first()
-        .ok_or(HuntersMarkError::MarkNotFound(pattern.clone()))?;
+    let selected_match = select_from_matches(&matches)?
+        .ok_or_else(|| HuntersMarkError::MarkNotFound(pattern.clone()))?;
 
-    // matches that are only 5 away
-    let close_matches = matches
-        .iter()
-        .filter(|m| m.2 - best_match.2 <= 5)
-        .collect::<Vec<_>>();
-
-    // Select the match to use (either prompt user or use best match)
-    let selected_match = if close_matches.len() > 1 {
-        let selected_idx = select_from_matches(&close_matches, |m| {
-            format!("{} → {}", m.1.name, m.0.display())
-        })?;
-
-        match selected_idx {
-            Some(idx) => close_matches[idx],
-            None => return Err(HuntersMarkError::MarkNotFound(pattern.clone()).into()),
-        }
-    } else {
-        best_match
-    };
-
-    let selected_path = selected_match.0.to_path_buf();
+    let selected_path = selected_match.path.clone();
 
     // Check if directory still exists
     if !selected_path.exists() {
@@ -46,9 +26,9 @@ pub fn path(pattern: String) -> Result<()> {
     }
 
     // Update last accessed timestamp
-    if let Some(mark) = config.marks.get_mut(&selected_path) {
+    if let Some(mark) = backend.config.marks.get_mut(&selected_path) {
         mark.last_accessed = Utc::now();
-        config.save()?;
+        backend.save()?;
     }
 
     // Print path for shell wrapper to use
