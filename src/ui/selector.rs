@@ -1,5 +1,9 @@
 use crate::error::Result;
-use dialoguer::{Select, console::Term, theme::ColorfulTheme};
+use dialoguer::{
+    Select,
+    console::{Style, Term},
+    theme::ColorfulTheme,
+};
 use std::fs::OpenOptions;
 
 /// Displays an interactive selection dialog for choosing from multiple matches.
@@ -16,7 +20,11 @@ pub fn select_from_matches<T>(
     let tty_file = OpenOptions::new().read(true).write(true).open("/dev/tty")?;
 
     // Wrap in a Term for dialoguer
-    let term = Term::read_write_pair(tty_file.try_clone()?, tty_file);
+    let term = Term::read_write_pair_with_style(
+        tty_file.try_clone()?,
+        tty_file,
+        Style::new().for_stdout(),
+    );
 
     // Create a Select prompt with a nice theme
     let selection = Select::with_theme(&ColorfulTheme::default())

@@ -52,6 +52,10 @@ pub enum Commands {
     Init {
         /// Shell type (bash, zsh, fish)
         shell: Shell,
+
+        /// Prefix for the hunters-mark command
+        #[arg(short, long, default_value = "hm")]
+        prefix: String,
     },
 
     /// Generate shell completions

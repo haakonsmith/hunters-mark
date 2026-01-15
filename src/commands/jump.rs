@@ -27,10 +27,7 @@ pub fn path(pattern: String) -> Result<()> {
 
         match selected_idx {
             Some(idx) => close_matches[idx],
-            None => {
-                eprintln!("Selection cancelled");
-                return Ok(());
-            }
+            None => return Err(HuntersMarkError::MarkNotFound(pattern.clone()).into()),
         }
     } else {
         best_match
