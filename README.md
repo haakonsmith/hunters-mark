@@ -4,12 +4,22 @@ Quick directory navigation for your terminal. Mark directories and jump between 
 
 This idea came about from using zoxide. It's awesome and lets me navigate the terminal so much easier that I forgot what I ever did before it, however, I find myself mostly using it to jump between common directories. E.g. jump between projects, and I thought, what if I had a cli tool which could do that for me? I could mark directories and then navigate to them. Furthermore, I could setup some scripts to initalise project workspaces, e.g. start different cli tools launch zed windows etc. That is how "hunter's mark" came to be, it's a quick name for something to prevent bikeshedding and I thought of the name harpoon but that is kinda already used by the Primeagans cli tool.
 
+## AI Disclosure/Code Quality
+
+I reckon if you can't tell that it's AI then that's the right kind of AI usage, however, in it's current state you can probably guess some of it was slopped out by an AI. I'd like to acknowledge that if I end up improving it then I'll tidy it up
+
 ## Installation
 
 ### From Source
 
 ```bash
 cargo install --path .
+```
+
+### From GitHub
+
+```bash
+cargo install --git https://github.com/haakonsmith/hunters-mark.git
 ```
 
 ### Shell Integration
