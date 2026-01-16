@@ -28,34 +28,42 @@ Add to your shell config (required for directory jumping):
 
 **Zsh** (`~/.zshrc`):
 ```bash
-eval "$(hm init zsh)"
+eval "$(hunters-mark init zsh)"
 ```
 
 **Bash** (`~/.bashrc`):
 ```bash
-eval "$(hm init bash)"
+eval "$(hunters-mark init bash)"
 ```
 
 **Fish** (`~/.config/fish/config.fish`):
 ```fish
-hm init fish | source
+hunters-mark init fish | source
 ```
+
+This will add a new command with prefix `hm` by default. You can also use `hunters-mark init --prefix "<WHATEVER>"` to change that.
 
 ### Shell Completions (Optional)
 
 **Zsh**:
-```bash
-hm completions zsh > ~/.zsh/completions/_hm
+```zsh
+hunters-mark completions zsh > ~/.zsh/completions/_hm
 ```
 
 **Bash**:
 ```bash
-hm completions bash > ~/.local/share/bash-completion/completions/hm
+hunters-mark completions bash > ~/.local/share/bash-completion/completions/hm
 ```
 
 **Fish**:
-```bash
-hm completions fish > ~/.config/fish/completions/hm.fish
+```fish
+hunters-mark completions fish > ~/.config/fish/completions/hm.fish
+```
+
+Or
+
+```fish
+hunters-mark completions fish | source
 ```
 
 ## Usage
@@ -98,7 +106,7 @@ hm list --recent
 ### Remove a mark
 
 ```bash
-hm remove myproject
+hm remove
 ```
 
 ## Configuration
@@ -124,13 +132,9 @@ created_at = "2026-01-10T15:00:00Z"
 - Automatic timestamp tracking
 - Cross-platform (macOS, Linux, Windows)
 - Shell completions for bash, zsh, and fish
+- TUI selector
 
 ## Planned Features
 
-- TUI selector mode (interactive fuzzy finder)
 - Project initialization scripts
 - Script trust/security mechanism
-
-## License
-
-MIT
